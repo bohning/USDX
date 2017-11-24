@@ -187,6 +187,9 @@ type
 var screenSingViewRef: TScreenSingView;
     TotalTime:              real;
 
+const
+  ID='ID_022';   //for help system
+
 implementation
 
 uses
@@ -195,6 +198,7 @@ uses
   UDLLManager,
   UDraw,
   UGraphic,
+  UHelp,
   ULanguage,
   ULog,
   UNote,
@@ -423,6 +427,12 @@ begin
             else
               Ini.WebCamEffect := 0;
           end;
+        end
+        else // show help popup
+        begin
+          if not paused then
+            Pause;
+          ScreenPopupHelp.ShowPopup();
         end;
       end;
     end;
@@ -512,6 +522,9 @@ begin
   inherited;
 
   Log.LogStatus('Begin', 'OnShow');
+
+  if not Help.SetHelpID(ID) then
+    Log.LogError('No Entry for Help-ID ' + ID + ' (ScreenSingController)');
 
   FadeOut := false;
 

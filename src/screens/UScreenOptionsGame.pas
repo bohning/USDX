@@ -60,10 +60,14 @@ type
       procedure RefreshSongs;
   end;
 
+const
+  ID='ID_071';   //for help system
+
 implementation
 
 uses
   UGraphic,
+  UHelp,
   ULanguage,
   ULog,
   UUnicodeUtils,
@@ -93,6 +97,10 @@ begin
           RefreshSongs;
           FadeTo(@ScreenOptions);
         end;
+      SDLK_TAB:
+      begin
+        ScreenPopupHelp.ShowPopup();
+      end;
       SDLK_RETURN:
         begin
           if SelInteraction = 6 then
@@ -182,6 +190,9 @@ begin
   ActualSongMenu := Ini.SongMenu;
 
   Interaction := 0;
+
+  if not Help.SetHelpID(ID) then
+    Log.LogError('No Entry for Help-ID ' + ID + ' (ScreenOptionsGame)');
 end;
 
 procedure TScreenOptionsGame.ReloadScreens;

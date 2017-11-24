@@ -174,12 +174,16 @@ type
       procedure OnHide; override;
   end;
 
+const
+  ID='ID_061';   //for help system
+
 implementation
 
 uses
   UDrawTexture,
   UFiles,
   UGraphic,
+  UHelp,
   UIni,
   ULanguage,
   ULog,
@@ -413,6 +417,8 @@ begin
                 if ShowChannels then SelChannel := 0;
               end;
             end
+          else // show help popup
+            ScreenPopupHelp.ShowPopup();
         end;
 
       // zooming controls
@@ -801,6 +807,9 @@ var
 {$ENDIF}
 begin
   inherited;
+
+  if not Help.SetHelpID(ID) then
+    Log.LogError('No Entry for Help-ID ' + ID + ' (ScreenEditConvert)');
 
   Interaction := 0;
 

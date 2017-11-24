@@ -71,11 +71,15 @@ type
       property Filename: IPath READ fFilename WRITE fFilename;
   end;
 
+const
+  ID='ID_062';   //for help system
+
 implementation
 
 uses
   UDraw,
   UGraphic,
+  UHelp,
   ULog,
   UMain,
   USkins,
@@ -137,6 +141,11 @@ begin
           end;
         end;
 
+      SDLK_TAB:
+        begin
+          ScreenPopupHelp.ShowPopup();
+        end;
+
       SDLK_LEFT,
       SDLK_UP:
         begin
@@ -172,6 +181,9 @@ end;
 procedure TScreenOpen.OnShow;
 begin
   inherited;
+
+  if not Help.SetHelpID(ID) then
+    Log.LogError('No Entry for Help-ID ' + ID + ' (ScreenOpen)');
 
   Interaction := 0;
   Button[FileNameID].Text[0].Text := fFilename.ToUTF8();
