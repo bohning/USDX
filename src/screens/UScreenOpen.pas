@@ -57,7 +57,6 @@ type
       //fTextF:      array[0..1] of integer;
       FileNameID:  integer; // button ID of filename
       fFilename:   IPath;
-      fBackScreen: PMenu;
 
     public
       constructor Create; override;
@@ -71,8 +70,6 @@ type
        * TODO: maybe pass this value with a callback OnValueChanged()
        *}
       property Filename: IPath READ fFilename WRITE fFilename;
-      {** The screen that is shown after this screen is closed (set by the caller) *}
-      property BackScreen: PMenu READ fBackScreen WRITE fBackScreen;
   end;
 
 implementation
@@ -115,7 +112,7 @@ begin
           //Empty Filename and go to last Screen
           fFileName := PATH_NONE;
           AudioPlayback.PlaySound(SoundLib.Back);
-          FadeTo(fBackScreen);
+          FadeTo(@ScreenEditConvert);
         end;
 
       SDLK_RETURN:
@@ -129,14 +126,14 @@ begin
             //Update Filename and go to last Screen
             fFileName := Path(Button[0].Text[0].Text);
             AudioPlayback.PlaySound(SoundLib.Back);
-            FadeTo(fBackScreen);
+            FadeTo(@ScreenEditConvert);
           end
           else if (Interaction = 2) then
           begin
             //Empty Filename and go to last Screen
             fFileName := PATH_NONE;
             AudioPlayback.PlaySound(SoundLib.Back);
-            FadeTo(fBackScreen);
+            FadeTo(@ScreenEditConvert);
           end;
         end;
 
