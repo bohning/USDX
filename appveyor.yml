@@ -117,8 +117,8 @@ for:
       - sh: echo _NPROCESSORS_ONLN=$(getconf _NPROCESSORS_ONLN)
 
     install:
-      - sh: $env:package_version = ("$(git describe --tags --always --long)").trim()
-      - sh: Update-AppveyorBuild -Version "$env:package_version-$env:APPVEYOR_BUILD_NUMBER"
+      - ps: $env:package_version = ("$(git describe --tags --always --long)").trim()
+      - ps: Update-AppveyorBuild -Version "$env:package_version-$env:APPVEYOR_BUILD_NUMBER"
       # Adding fpc repository
       - sudo add-apt-repository -y ppa:ok2cqr/lazarus
       - sh: sudo apt update -qq
