@@ -80,8 +80,8 @@ for:
       - sh: export PATH=/usr/local/bin:$PATH
 
     install:
-      - sh: $env:package_version = ("$(git describe --tags --always --long)").trim()
-      - sh: Update-AppveyorBuild -Version "$env:package_version-$env:APPVEYOR_BUILD_NUMBER"
+      - ps: $env:package_version = ("$(git describe --tags --always --long)").trim()
+      - ps: Update-AppveyorBuild -Version "$env:package_version-$env:APPVEYOR_BUILD_NUMBER"
       - sh: brew update
       - sh: brew install sdl2 sdl2_gfx sdl2_image sdl2_mixer sdl2_net sdl2_ttf fpc portaudio binutils freetype libpng lua libtiff opencv portmidi ffmpeg@2.8
       # latest version of ffmpeg (4.3.x) is not supported yet, so an older version needs to be installed
