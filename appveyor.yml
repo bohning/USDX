@@ -122,7 +122,8 @@ for:
       # Adding fpc repository
       - sudo add-apt-repository -y ppa:ok2cqr/lazarus
       - sh: sudo apt update -qq
-      - sh: sudo apt install -y fpc liblua5.1-dev libopencv-highgui-dev cmake ftgl-dev libglew-dev build-essential autoconf automake libtool libasound2-dev libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxinerama-dev libxxf86vm-dev libxss-dev libgl1-mesa-dev libdbus-1-dev libudev-dev libgles1-mesa-dev libgles2-mesa-dev libegl1-mesa-dev libgles1-mesa libsamplerate0-dev libxkbcommon-dev curl realpath
+      #- sh: sudo apt install -y libopencv-highgui-dev cmake ftgl-dev libglew-dev build-essential autoconf libtool libasound2-dev libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxinerama-dev libxxf86vm-dev libxss-dev libgl1-mesa-dev libdbus-1-dev libudev-dev libgles1-mesa-dev libgles2-mesa-dev libegl1-mesa-dev libgles1-mesa libsamplerate0-dev libxkbcommon-dev curl realpath
+      - sh: sudo apt install -y automake make gcc fpc libsdl2-image-dev libavformat-dev libswscale-dev libsqlite3-dev libfreetype6-dev portaudio19-dev libportmidi-dev liblua5.3-dev libopencv-videoio-dev
 
     build_script:
       - sh: ./autogen.sh
