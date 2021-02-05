@@ -89,6 +89,8 @@ for:
       - sh: brew link lua@5.3
       # latest version of ffmpeg (4.3.x) is not supported yet, so an older version needs to be installed
       - sh: brew install ffmpeg@2.8
+      - sh: brew unlink ffmpeg
+      - sh: brew link ffmpeg@2.8
 
     build_script:
       - sh: ./autogen.sh
