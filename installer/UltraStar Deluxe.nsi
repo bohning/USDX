@@ -1,6 +1,7 @@
 ; ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~
 ; UltraStar Deluxe Installer: Main
 ; ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~
+Unicode True
 
 !include MUI2.nsh
 !include WinVer.nsh
