@@ -90,15 +90,13 @@ for:
       - sh: brew install lua@5.3
 
     build_script:
-      - sh: cd src
-      - sh: ls
       - sh: ./autogen.sh
       - sh: ./configure --enable-osx-brew --with-opencv-cxx-api
-      - sh: make macosx-standalone-app -j$(getconf _NPROCESSORS_ONLN)
+      #- sh: make macosx-standalone-app -j$(getconf _NPROCESSORS_ONLN)
       - sh: make macosx-dmg -j$(getconf _NPROCESSORS_ONLN)
 
     artifacts:
-      - path: bin/release
+      - path: UltraStarDeluxe.app
         name: UltraStarDeluxe application
         type: app
       - path: UltraStarDeluxe.dmg
@@ -124,11 +122,13 @@ for:
       - sh: sudo apt install -y fpc liblua5.1-dev libopencv-highgui-dev cmake ftgl-dev libglew-dev build-essential autoconf automake libtool libasound2-dev libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxinerama-dev libxxf86vm-dev libxss-dev libgl1-mesa-dev libdbus-1-dev libudev-dev libgles1-mesa-dev libgles2-mesa-dev libegl1-mesa-dev libsamplerate0-dev libxkbcommon-dev curl realpath
 
     build_script:
-      - sh: cd src
       - sh: ./autogen.sh
       - sh: ./configure
       - sh: make -j$(getconf _NPROCESSORS_ONLN)
+      - sh: cd dists/linux
+      - sh: make compress
+      - sh: filename="UltraStarDeluxe-$(uname -m).tar.xz"
 
     artifacts:
-      - path: bin/release/UltraStar-Creator-*.AppImage
-        name: UltraStar-Creator AppImage Package
+      - path: *.tar.gz
+        name: UltraStarDeluxe Archive
