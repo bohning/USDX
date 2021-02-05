@@ -131,8 +131,7 @@ for:
       - sh: make -j$(getconf _NPROCESSORS_ONLN)
       - sh: cd dists/linux
       - sh: make compress
-      - sh: filename="UltraStarDeluxe-$(uname -m).tar.xz"
 
     artifacts:
-      - path: UltraStarDeluxe*.tar.xz
+      - path: build/x86_64/UltraStarDeluxe*.tar.xz
         name: UltraStarDeluxe Archive
