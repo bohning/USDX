@@ -130,5 +130,5 @@ for:
       - sh: filename="UltraStarDeluxe-$(uname -m).tar.xz"
 
     artifacts:
-      - path: *.tar.gz
+      - path: UltraStarDeluxe*.tar.gz
         name: UltraStarDeluxe Archive
