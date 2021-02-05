@@ -1,6 +1,7 @@
 ; ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~
 ; UltraStar Deluxe Installer: Update
 ; ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~ ~+~
+Unicode True
 
 !include MUI2.nsh
 !include WordFunc.nsh 
