@@ -1,29 +1,138 @@
+#version: 1.2.{build}
+
+#branches:
+#  only:
+#    - master
+
 environment:
-  NewPascalVersion: v1.0.50
+  global:
+    APPVEYOR_SAVE_CACHE_ON_ERROR: true
+    APPVEYOR_CACHE_ENTRY_ZIP_ARGS: -t7z -m0=lzma -mx=4
+    APPVEYOR_RDP_PASSWORD: UltraStarDeluxe!
+    NewPascalVersion: v1.0.50
 
-install:
-  - appveyor AddMessage -Category Information "Downloading NewPascal %NewPascalVersion%..."
-  - appveyor DownloadFile https://github.com/newpascal/newpascal/releases/download/np-%NewPascalVersion%/newpascal.zip
-  - appveyor AddMessage "Unpacking NewPascal %NewPascalVersion%..."
-  - 7z x -y "newpascal.zip" -o"C:\" > nul
-  - appveyor AddMessage -Category Information "Configuring NewPascal..."
-  - c:\newpascal\configure.bat
-  - set FPCDIR=c:\newpascal\fpcsrc
-  - set PATH=c:\newpascal\fpc\bin\i386-win32;c:\newpascal\binw32;C:\Program Files (x86)\NSIS;%path%
+image:
+  # AppVeyor builds are ordered by the image list:
+  - Visual Studio 2019
+  - macos
+  - Ubuntu1604
 
-build_script:
-  - appveyor AddMessage -Category Information "Building UltraStar-Deluxe..."
-  - c:\newpascal\lazarus\lazbuild src\ultrastardx-win.lpi --lazarusdir=c:\newpascal\lazarus
-  - appveyor AddMessage -Category Information "Done."
+for:
+  # Windows
+  -
+    matrix:
+      only:
+        - image: Visual Studio 2019
 
-after_build:
-  - appveyor AddMessage -Category Information "Creating Installer..."
-  - xcopy game\*.dll installer\dependencies\dll /y
-  - makensis "installer\UltraStar Deluxe.nsi"
-  - appveyor AddMessage -Category Information "Done."
+    clone_folder: C:\UltraStarDeluxe
 
-artifacts:
-  - path: game
-    name: UltraStar.Deluxe_continuous_portable
-    type: zip
-  - path: installer\dist\UltraStar.Deluxe_*_installer.exe
+    init:
+      - cmd: git config --global core.autocrlf input
+      - cmd: echo NUMBER_OF_PROCESSORS=%NUMBER_OF_PROCESSORS%
+      - cmd: echo PROCESSOR_IDENTIFIER=%PROCESSOR_IDENTIFIER%
+
+    install:
+      - ps: $env:package_version = ("$(git describe --tags --always --long)").trim()
+      - ps: Update-AppveyorBuild -Version "$env:package_version-$env:APPVEYOR_BUILD_NUMBER"
+      - appveyor AddMessage -Category Information "Downloading NewPascal %NewPascalVersion%..."
+      - appveyor DownloadFile https://github.com/newpascal/newpascal/releases/download/np-%NewPascalVersion%/newpascal.zip
+      - appveyor AddMessage "Unpacking NewPascal %NewPascalVersion%..."
+      - 7z x -y "newpascal.zip" -o"C:\" > nul
+      - appveyor AddMessage -Category Information "Configuring NewPascal..."
+      - c:\newpascal\configure.bat
+      - set FPCDIR=c:\newpascal\fpcsrc
+      - set PATH=c:\newpascal\fpc\bin\i386-win32;c:\newpascal\binw32;C:\Program Files (x86)\NSIS;%path%
+
+    before_build:
+      - cmd: echo PATH=%PATH%
+
+    build_script:
+      - appveyor AddMessage -Category Information "Building UltraStar-Deluxe..."
+      - c:\newpascal\lazarus\lazbuild src\ultrastardx-win.lpi --lazarusdir=c:\newpascal\lazarus
+      - appveyor AddMessage -Category Information "Done."
+
+    after_build:
+      - appveyor AddMessage -Category Information "Creating Installer..."
+      - xcopy game\*.dll installer\dependencies\dll /y
+      - makensis "installer\UltraStar Deluxe.nsi"
+      - appveyor AddMessage -Category Information "Done."
+
+    artifacts:
+      - path: game
+        name: UltraStar.Deluxe_continuous_portable
+        type: zip
+      - path: installer\dist\UltraStar.Deluxe_*_installer.exe
+
+    on_failure:
+      # Change false to true to block build and investigate build failures
+      - ps: $blockRdp = $false; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+  # Mac
+  -
+    matrix:
+      only:
+        - image: macos
+
+    clone_folder: ~/UltraStarDeluxe
+
+    init:
+      - sh: echo _NPROCESSORS_ONLN=$(getconf _NPROCESSORS_ONLN)
+      - sh: export PATH=$HOME/Qt/latest/clang_64/bin:/usr/local/bin:$PATH
+      - sh: set PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig"
+
+    install:
+      - ps: $env:package_version = ("$(git describe --tags --always --long)").trim()
+      - ps: Update-AppveyorBuild -Version "$env:package_version-$env:APPVEYOR_BUILD_NUMBER"
+      - brew update
+      - brew install sdl2 sdl2_gfx sdl2_image sdl2_mixer sdl2_net sdl2_ttf fpc portaudio binutils freetype libpng lua libtiff opencv portmidi ffmpeg@2.8
+
+    build_script:
+      - cd src
+      - ./autogen.sh
+      - ./configure --enable-osx-brew --with-opencv-cxx-api
+      - make macosx-standalone-app -j$(getconf _NPROCESSORS_ONLN)
+      - make macosx-dmg -j$(getconf _NPROCESSORS_ONLN)
+
+    artifacts:
+      - path: bin/release
+        name: UltraStarDeluxe application
+        type: app
+      - path: UltraStarDeluxe.dmg
+        name: UltraStarDeluxe disk image
+
+  # Ubuntu (AppImage)
+  -
+    matrix:
+      only:
+        - image: Ubuntu1604
+
+    clone_folder: ~/UltraStarDeluxe
+
+    init:
+      - sh: echo _NPROCESSORS_ONLN=$(getconf _NPROCESSORS_ONLN)
+
+    install:
+      - sh: $env:package_version = ("$(git describe --tags --always --long)").trim()
+      - sh: Update-AppveyorBuild -Version "$env:package_version-$env:APPVEYOR_BUILD_NUMBER"
+      # Adding fpc repository
+      - sudo add-apt-repository -y ppa:ok2cqr/lazarus
+      - sh: sudo apt update -qq
+      - sh: sudo apt install -y fpc liblua5.1-dev libopencv-highgui-dev \
+        cmake ftgl-dev libglew-dev \
+        build-essential autoconf automake \
+        libtool libasound2-dev libx11-dev libxext-dev \
+        libxrandr-dev libxcursor-dev libxi-dev libxinerama-dev libxxf86vm-dev \
+        libxss-dev libgl1-mesa-dev libdbus-1-dev libudev-dev \
+        libgles1-mesa-dev libgles2-mesa-dev libegl1-mesa-dev \
+        libsamplerate0-dev libxkbcommon-dev \
+        curl realpath
+
+    build_script:
+      - sh: cd src
+      - sh: ./autogen.sh
+      - sh: ./configure
+      - sh: make -j$(getconf _NPROCESSORS_ONLN)
+
+    artifacts:
+      - path: bin/release/UltraStar-Creator-*.AppImage
+        name: UltraStar-Creator AppImage Package
