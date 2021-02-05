@@ -84,10 +84,14 @@ for:
       - ps: Update-AppveyorBuild -Version "$env:package_version-$env:APPVEYOR_BUILD_NUMBER"
       - sh: brew update
       - sh: brew install sdl2 sdl2_gfx sdl2_image sdl2_mixer sdl2_net sdl2_ttf fpc portaudio binutils freetype libpng libtiff opencv portmidi
-      # latest version of ffmpeg (4.3.x) is not supported yet, so an older version needs to be installed
-      - sh: brew install ffmpeg@2.8
       # latest version of lua (5.4) is not supported yet, so an older version needs to be installed
       - sh: brew install lua@5.3
+      - sh: brew unlink lua
+      - sh: brew link lua@5.3
+      # latest version of ffmpeg (4.3.x) is not supported yet, so an older version needs to be installed
+      - sh: brew install ffmpeg@2.8
+      
+      
 
     build_script:
       - sh: ./autogen.sh
