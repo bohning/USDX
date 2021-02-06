@@ -83,7 +83,9 @@ for:
       - ps: $env:package_version = ("$(git describe --tags --always --long)").trim()
       - ps: Update-AppveyorBuild -Version "$env:package_version-$env:APPVEYOR_BUILD_NUMBER"
       - sh: brew update
-      - sh: brew install sdl2 sdl2_gfx sdl2_image sdl2_mixer sdl2_net sdl2_ttf fpc binutils portaudio portmidi opencv
+      - sh: brew install sdl2 sdl2_gfx sdl2_image sdl2_mixer sdl2_net sdl2_ttf fpc portaudio portmidi opencv
+      # binutils not required (?) because Apple's CLT provides the same tools.
+      #- sh: brew install binutils
       # freetype already is a dependency of sdl2_ttf, libpng and libtiff already are dependencies of sdl2_image
       #- sh: brew install freetype libpng libtiff
       # latest version of lua (5.4) is not supported yet, so an older version needs to be installed
@@ -135,12 +137,12 @@ for:
       # Build AppImage
       - sh: wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
       - sh: chmod a+x linuxdeploy-x86_64.AppImage
-      - sh: cp icons/UltraStarDeluxe.desktop .
-      - sh: cp icons/ultrastardx-icon_256.png .
+      - sh: cp icons/UltraStarDeluxe.desktop AppDir
+      - sh: cp icons/ultrastardx-icon_256.png AppDir
       - sh: ./linuxdeploy-x86_64.AppImage --appdir AppDir
       #- sh: cd dists/linux
       #- sh: make compress
-      - sh: ls -la
+      - sh: ls -la AppDir
 
     artifacts:
       - path: dists/linux/*.AppImage
