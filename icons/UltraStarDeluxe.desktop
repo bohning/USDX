@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=UltraStarDeluxe
+Exec=ultrastardx %F
+Icon=UltraStarDeluxe
+Comment=Sing!
+Terminal=true
+Categories=Game;Music;X-Karaoke;X-UltraStar;
+Name[en]=UltraStarDeluxe.desktop
