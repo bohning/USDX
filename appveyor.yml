@@ -133,5 +133,5 @@ for:
       - sh: make compress
 
     artifacts:
-      - path: UltraStarDeluxe-x86_64.tar.xz
+      - path: dists/linux/UltraStarDeluxe-x86_64.tar.xz
         name: UltraStarDeluxe Archive
