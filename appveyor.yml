@@ -137,5 +137,5 @@ for:
       - sh: ls -la ../..
 
     artifacts:
-      - path: ~/UltraStarDeluxe/dists/UltraStarDeluxe*.tar.xz
+      - path: ~/UltraStarDeluxe/dists/linux/UltraStarDeluxe*.tar.xz
         name: UltraStarDeluxe Archive
