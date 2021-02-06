@@ -129,9 +129,19 @@ for:
       - sh: ./autogen.sh
       - sh: ./configure
       - sh: make -j$(getconf _NPROCESSORS_ONLN)
-      - sh: cd dists/linux
-      - sh: make compress
+      - sh: make install DESTDIR=AppDir
+      # Build AppImage
+      - sh: wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+      - sh: chmod a+x linuxdeploy-x86_64.AppImage
+      #- sh: cp ../../setup/unix/UltraStarDeluxe.desktop .
+      #- sh: cp ../../setup/unix/UltraStarDeluxe.png .
+      - sh: ./linuxdeploy-x86_64.AppImage --appdir AppDir
+      #- sh: cd dists/linux
+      #- sh: make compress
+      - sh: ls -la
 
     artifacts:
-      - path: dists/linux/UltraStarDeluxe-x86_64.tar.xz
-        name: UltraStarDeluxe Archive
+      - path: dists/linux/*.AppImage
+        name: UltraStarDeluxe AppImage Package
+      #- path: dists/linux/UltraStarDeluxe-x86_64.tar.xz
+      #  name: UltraStarDeluxe Archive
