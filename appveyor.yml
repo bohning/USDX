@@ -139,6 +139,7 @@ for:
       - sh: chmod a+x linuxdeploy-x86_64.AppImage
       - sh: cp icons/UltraStarDeluxe.desktop AppDir
       - sh: cp icons/ultrastardx-icon.svg AppDir
+      - sh: ls -la AppDir
       - sh: ./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
       - sh: pwd
       - sh: ls -la
