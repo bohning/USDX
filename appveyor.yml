@@ -139,16 +139,10 @@ for:
       - sh: chmod a+x linuxdeploy-x86_64.AppImage
       - sh: cp icons/UltraStarDeluxe.desktop AppDir
       - sh: cp icons/ultrastardx-icon.svg AppDir
-      - sh: ls -la AppDir
       - sh: ./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
       - sh: pwd
       - sh: ls -la
-      #- sh: cd dists/linux
-      #- sh: make compress
-      - sh: ls -la AppDir/usr/bin
 
     artifacts:
-      - path: dists/linux/*.AppImage
+      - path: *.AppImage
         name: UltraStarDeluxe AppImage Package
-      #- path: dists/linux/UltraStarDeluxe-x86_64.tar.xz
-      #  name: UltraStarDeluxe Archive
